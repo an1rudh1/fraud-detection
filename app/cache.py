@@ -1,10 +1,15 @@
 import json
 
 import redis
+import os
 
 from app.db import fetch_history_features
 
-r = redis.Redis(host="localhost", port=6380, decode_responses=True)
+r = redis.Redis(
+    host=os.getenv("REDIS_HOST", "localhost"),
+    port=int(os.getenv("REDIS_PORT", "6380")),
+    decode_responses=True,
+)
 TTL_SECONDS = 300
 
 
