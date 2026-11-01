@@ -2,13 +2,13 @@ import os
 from contextlib import contextmanager
 
 from dotenv import load_dotenv
-from psycopg2.pool import SimpleConnectionPool
+from psycopg2.pool import ThreadedConnectionPool
 
 load_dotenv()
 
-pool = SimpleConnectionPool(
-    1,
-    5,
+pool = ThreadedConnectionPool(
+    2,
+    20,
     host="localhost",
     port=5432,
     dbname=os.getenv("POSTGRES_DB"),
