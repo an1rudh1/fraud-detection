@@ -1,0 +1,28 @@
+{
+  "features": [
+    "amount",
+    "hour_of_day",
+    "secs_since_last",
+    "txn_count_1h",
+    "avg_amount_prior",
+    "amount_ratio",
+    "category"
+  ],
+  "categories": [
+    "entertainment",
+    "food_dining",
+    "gas_transport",
+    "grocery_net",
+    "grocery_pos",
+    "health_fitness",
+    "home",
+    "kids_pets",
+    "misc_net",
+    "misc_pos",
+    "personal_care",
+    "shopping_net",
+    "shopping_pos",
+    "travel"
+  ],
+  "threshold": 0.95
+}
