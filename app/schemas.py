@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from typing import Optional
 
 from pydantic import BaseModel, Field
@@ -17,3 +19,9 @@ class PredictionResponse(BaseModel):
     fraud_score: float
     is_fraud: bool
     threshold: float
+
+class TransactionRequest(BaseModel):
+    card_id: int
+    trans_ts: datetime
+    amount: float = Field(gt=0)
+    category: str
