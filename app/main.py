@@ -2,10 +2,10 @@ import json
 from pathlib import Path
 
 import pandas as pd
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Response
 from xgboost import XGBClassifier
 
-from app.db import fetch_history_features
+from app.cache import get_history_features
 from app.schemas import PredictionResponse, TransactionFeatures, TransactionRequest
 
 ML_DIR = Path(__file__).resolve().parent.parent / "ml"
@@ -47,15 +47,17 @@ def predict(txn: TransactionFeatures):
 
 
 @app.post("/score", response_model=PredictionResponse)
-def score_transaction(req: TransactionRequest):
-    secs, count, avg = fetch_history_features(req.card_id, req.trans_ts)
+@app.post("/score", response_model=PredictionResponse)
+def score_transaction(req: TransactionRequest, response: Response):
+    (secs, count, avg), cache_hit = get_history_features(req.card_id, req.trans_ts)
+    response.headers["X-Cache"] = "HIT" if cache_hit else "MISS"
     features = {
         "amount": req.amount,
         "hour_of_day": req.trans_ts.hour,
-        "secs_since_last": float(secs) if secs is not None else None,
+        "secs_since_last": secs,
         "txn_count_1h": count,
-        "avg_amount_prior": float(avg) if avg is not None else None,
-        "amount_ratio": req.amount / float(avg) if avg else None,
+        "avg_amount_prior": avg,
+        "amount_ratio": req.amount / avg if avg else None,
         "category": req.category,
     }
     return score(features)

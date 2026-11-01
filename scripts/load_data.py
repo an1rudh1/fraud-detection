@@ -42,4 +42,4 @@ with conn, conn.cursor() as cur:
         f"COPY transactions ({', '.join(df.columns)}) FROM STDIN WITH CSV", buf
     )
 conn.close()
-print("loaded")
+print("loaded") 
